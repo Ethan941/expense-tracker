@@ -1,14 +1,57 @@
+# Secrets — ne jamais commiter
 .env
 *.json
 !package.json
+
+# Python
 __pycache__/
-*.pyc
+*.py[codz]
 *.pyo
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environnements virtuels
 .venv/
 venv/
 env/
+ENV/
+env.bak/
+venv.bak/
+
+# Tests / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Outils
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.pyre/
+cython_debug/
+
+# Projet
 uploads/
 .DS_Store
-*.egg-info/
-dist/
-build/
