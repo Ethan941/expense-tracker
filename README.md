@@ -41,11 +41,27 @@ expense-tracker/
 
 ## Installation
 
-### 1. Cloner et installer les dépendances
+### 1. Choisir où cloner le projet
+
+Par défaut, `git clone` crée le dossier **dans le répertoire où tu te trouves** dans le terminal. Si tu ne veux pas qu'il atterrisse sur le Bureau, choisis un emplacement avant de lancer la commande :
 
 ```bash
+# Exemple : cloner dans un dossier Projets dans Documents
+cd ~/Documents
+mkdir -p Projets
+cd Projets
+
+# Ensuite cloner — le dossier expense-tracker sera créé ici
 git clone https://github.com/<votre-username>/expense-tracker.git
 cd expense-tracker
+```
+
+> Si tu lances `git clone` sans `cd` au préalable, le projet apparaît dans le dossier
+> où ton terminal est ouvert (souvent le Bureau ou le dossier personnel).
+
+### 2. Installer les dépendances
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate      # Windows : .venv\Scripts\activate
 pip install -r requirements.txt
