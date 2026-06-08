@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes de Frais — Expense Tracker</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">&#9783;</span>
+        <span class="logo-text">Expense<strong>Tracker</strong></span>
+      </div>
+      <p class="subtitle">Capturez vos justificatifs, l'IA fait le reste.</p>
+    </header>
+
+    <main class="app-main">
+
+      <!-- Zone upload -->
+      <div id="upload-zone" class="card upload-card">
+        <div
+          id="drop-area"
+          class="drop-area"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)"
+        >
+          <div class="drop-icon">&#128247;</div>
+          <p class="drop-title">Déposez votre justificatif ici</p>
+          <p class="drop-sub">ou</p>
+          <label class="btn btn-primary" for="file-input">
+            Choisir un fichier
+          </label>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            style="display:none"
+            onchange="handleFileSelect(event)"
+          >
+          <p class="drop-hint">JPEG · PNG · WebP · max 10 Mo</p>
+        </div>
+
+        <!-- Prévisualisation -->
+        <div id="preview-zone" class="preview-zone hidden">
+          <img id="preview-img" class="preview-img" src="" alt="Aperçu">
+          <div class="preview-info">
+            <span id="preview-name" class="preview-name"></span>
+            <button class="btn btn-ghost" onclick="resetApp()">&#x2715; Changer</button>
+          </div>
+          <div id="analyze-zone">
+            <button
+              id="analyze-btn"
+              class="btn btn-primary btn-full"
+              onclick="submitImage()"
+            >
+              Analyser avec l'IA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone résultat (formulaire ou confirmation) -->
+      <div id="result-zone"></div>
+
+    </main>
+
+    <footer class="app-footer">
+      Propulsé par Groq · Llama 4 Scout · FastAPI · HTMX
+    </footer>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
