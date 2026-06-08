@@ -1,0 +1,14 @@
+Analyse cette image de justificatif de dépense professionnelle et retourne un JSON avec exactement ces champs :
+
+{
+  "type_document": "restaurant" | "transport" | "hôtel" | "autre",
+  "fournisseur": "nom du commerce ou de la compagnie (string ou null)",
+  "date": "JJ/MM/AAAA (string ou null)",
+  "montant_ttc": nombre décimal en euros (float ou null),
+  "tva": nombre décimal en euros (float ou null — null si non lisible sur le document),
+  "devise": "code devise ISO (string, EUR par défaut)",
+  "description": "courte description du motif de la dépense, max 100 caractères (string ou null)",
+  "confiance": "haute" | "moyen" | "basse"
+}
+
+Retourne uniquement ce JSON, sans texte supplémentaire, sans markdown.
