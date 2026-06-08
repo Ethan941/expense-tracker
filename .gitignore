@@ -1,0 +1,14 @@
+.env
+*.json
+!package.json
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+uploads/
+.DS_Store
+*.egg-info/
+dist/
+build/
