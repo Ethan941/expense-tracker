@@ -69,6 +69,9 @@ function submitImage() {
     .then((html) => {
       document.getElementById("result-zone").innerHTML = html;
       document.getElementById("result-zone").scrollIntoView({ behavior: "smooth" });
+      // Attache le handler après injection du formulaire dans le DOM
+      const form = document.getElementById("expense-form");
+      if (form) form.addEventListener("submit", submitExpenseForm);
     })
     .catch((errHtml) => {
       document.getElementById("result-zone").innerHTML =
@@ -93,17 +96,38 @@ function resetApp() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ── Événements HTMX ──────────────────────────────────────────────────────
+// ── Soumission du formulaire vers /api/submit ─────────────────────────────
 
-document.addEventListener("htmx:responseError", (e) => {
-  const target = document.getElementById("result-zone");
-  if (target) {
-    target.innerHTML =
-      e.detail.xhr.responseText ||
-      '<div class="card confirmation error"><div class="icon">✗</div><h3>Erreur serveur</h3></div>';
+function submitExpenseForm(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("expense-form");
+  const btn = document.getElementById("submit-btn");
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px"></span> Envoi en cours…';
+
+  const formData = new FormData(form);
+
+  // Ajoute le fichier image original si disponible
+  if (currentFile) {
+    formData.append("image_file", currentFile, currentFile.name);
   }
-});
 
-document.addEventListener("htmx:afterSwap", () => {
-  document.getElementById("result-zone").scrollIntoView({ behavior: "smooth" });
-});
+  fetch("/api/submit", { method: "POST", body: formData })
+    .then((res) => res.text())
+    .then((html) => {
+      document.getElementById("result-zone").innerHTML = html;
+      document.getElementById("result-zone").scrollIntoView({ behavior: "smooth" });
+    })
+    .catch(() => {
+      document.getElementById("result-zone").innerHTML =
+        '<div class="card confirmation error"><div class="icon">✗</div><h3>Erreur réseau</h3></div>';
+    })
+    .finally(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = "&#8679; Envoyer vers Google Sheets";
+      }
+    });
+}

@@ -62,8 +62,7 @@ async def submit(
     devise: str = Form("EUR"),
     description: str = Form(""),
     confiance: str = Form(""),
-    image_data: str = Form(""),
-    image_media_type: str = Form("image/jpeg"),
+    image_file: UploadFile = File(None),
 ):
     def to_float(val: str):
         try:
@@ -83,14 +82,13 @@ async def submit(
     }
 
     image_url = None
-    if image_data:
+    if image_file and image_file.filename:
         try:
-            b64_part = image_data.split(",", 1)[1] if "," in image_data else image_data
-            image_bytes = base64.standard_b64decode(b64_part)
+            image_bytes = await image_file.read()
             date_safe = (data.get("date") or "unknown").replace("/", "-")
             image_url = sheets_client.upload_image_to_drive(
                 image_bytes,
-                image_media_type,
+                image_file.content_type or "image/jpeg",
                 f"note_frais_{date_safe}_{data.get('fournisseur') or 'inconnu'}",
             )
         except Exception:
@@ -131,14 +129,7 @@ def _form_html(data: dict, image_data_uri: str, media_type: str) -> str:
     <h3>Données extraites</h3>
     <span class="badge {badge_cls}">Confiance : {confiance}</span>
   </div>
-  <form
-    hx-post="/api/submit"
-    hx-target="#result-zone"
-    hx-swap="innerHTML"
-    hx-encoding="application/x-www-form-urlencoded"
-  >
-    <input type="hidden" name="image_data" value="{image_data_uri}">
-    <input type="hidden" name="image_media_type" value="{media_type}">
+  <form id="expense-form" method="post" action="/api/submit">
 
     <div class="form-grid">
       <div class="form-group">
@@ -180,7 +171,7 @@ def _form_html(data: dict, image_data_uri: str, media_type: str) -> str:
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" id="submit-btn" class="btn btn-primary">
         &#8679; Envoyer vers Google Sheets
       </button>
     </div>
